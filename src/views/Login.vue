@@ -3,23 +3,19 @@
     <div class="login-wrap">
         <div class="ms-login">
             <div class="ms-title">sut作业管理系统</div>
-            <el-form  ref="login" label-width="50px" class="ms-content">
+            <el-form  ref="ruleForm" :rules="rules" class="ms-content" :model="ruleForm">
 
-                <el-form-item prop="username" label="账号">
-                    
-                    <el-input v-model="ruleForm.username" placeholder="username"></el-input>
-
+                <el-form-item label="账号" prop="username">
+                  <el-input v-model="ruleForm.username"></el-input>
                 </el-form-item>
-                <el-form-item prop="password" label="密码">
 
-                    <el-input type="password" placeholder="password" v-model="ruleForm.password"></el-input>
+                <el-form-item label="密码" prop="password">
+                  <el-input type="password" v-model="ruleForm.password"></el-input>
                 </el-form-item>
-                
-                <div class="login-btn">
-                    <el-button type="primary" @click="submitForm()">登录</el-button>
-                </div>
 
-
+                  <el-button type="primary" @click="submitForm('ruleForm')" class="ms-btn">登录</el-button>
+                  <el-button type="primary" @click="resetForm('ruleForm')" class="ms-btn">重置</el-button>
+                       
             </el-form>
         </div>
     </div>
@@ -30,20 +26,8 @@
 
 export default {
 
-
+  name: "Login",
   data() {
-    const checkPass = (rule, value, callback) => {
-      
-      if (!value) {
-        return callback(new Error('请输入密码'))
-      }
-    }
-
-    const validateUsername = (rule, value, callback) => {
-      if (value === '') {
-        callback(new Error('请输入用户名'))
-      }
-    }
 
     return {
       ruleForm: {
@@ -52,22 +36,51 @@ export default {
       },
 
       rules: {
-        username: [{ validator: validateUsername, trigger: 'blur' }],
-        password: [{ validator: checkPass, trigger: 'blur' }],
+         username: [
+            { required: true, message: '请输入学号', trigger: 'blur' },
+          ],
+          password: [
+            { required: true, message: '请输入密码', trigger: 'change' }
+          ]
       },
     }
   },
 
 
   methods: {
-    submitForm() {
-      this.$router.push("/home")
-
-    },
     
     resetForm(formName) {
       this.$refs[formName].resetFields()
     },
+
+    submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+
+          if (valid) {
+            const _this = this
+
+             this.$axios.post('/login', this.ruleForm).then(res => {
+
+              console.log(res.data)
+
+              const jwt = res.headers['authorization']
+              const userInfo = res.data.data
+              // 把数据共享出去
+              _this.$store.commit("SET_TOKEN", jwt)
+              _this.$store.commit("SET_USERINFO", userInfo)
+              // 获取
+              console.log(_this.$store.getters.getUser)
+              _this.$router.push("/home/homePage")
+            })
+           
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+
+
   },
 }
 
@@ -102,18 +115,8 @@ export default {
 .ms-content {
     padding: 30px 30px;
 }
+.ms-btn {
+  margin-left: 50px;
+}
 
-.login-btn {
-    text-align: center;
-}
-.login-btn button {
-    width: 100%;
-    height: 36px;
-    margin-bottom: 10px;
-}
-.login-tips {
-    font-size: 12px;
-    line-height: 30px;
-    color: #fff;
-}
 </style>

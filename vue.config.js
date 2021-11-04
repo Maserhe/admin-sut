@@ -5,5 +5,13 @@ module.exports = {
         // require('unplugin-vue-components/webpack')({ /* options */ }),
       ],
     },
+
+    // devServer: {
+    //   proxy: 'http://localhost:8080',
+    //   changeOrigin: true,
+
+    // }
+  
+  
   }
   
