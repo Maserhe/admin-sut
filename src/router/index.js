@@ -5,6 +5,8 @@ import Class from '../components/Class.vue'
 import Resource from '../components/Resource.vue'
 import UserInfo from '../components/UserInfo.vue'
 import ModifyInfo from '../components/ModifyInfo.vue'
+import SetUp from '../components/SetUp.vue'
+
 
 const routes = [
   {
@@ -52,6 +54,12 @@ const routes = [
         name: 'ModifyInfo',
         component: ModifyInfo,
       },
+      {
+        path: 'setup',
+        name: 'SetUp',
+        component: SetUp,
+      },
+
     ]
   }
 ]

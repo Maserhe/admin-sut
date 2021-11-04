@@ -29,12 +29,17 @@
           <span>资源</span>
       </el-menu-item>
 
+      <el-menu-item index="/home/setup" v-if=" userInfo.type === 1 ">
+          <el-icon><setting /></el-icon>
+          <span>管理</span>
+      </el-menu-item>
+
 
       <el-sub-menu index="/home/userinfo" class="ms-head">
       <template #title>
           <el-icon>
             <el-image
-              :src="user.avatar"
+              :src="userInfo.avatar"
               class="ms-img"
             ></el-image>
           </el-icon>
@@ -63,18 +68,14 @@ import {
   Menu as IconMenu,
   SetUp,
   Download,
+  Setting,
 } from '@element-plus/icons'
 
 export default {
   name: "Header",
   data() {
     return {
-      user: {
-        id: -1,
-        username: '学生',
-        avatar: 'https://ghproxy.com/https://github.com/Maserhe/PIc-Bed/blob/master/typora/202110271336023.jpg',
-        type: 0,
-      }
+      userInfo: {},
 
     }
   },
@@ -97,10 +98,8 @@ export default {
   created() {
     
     this.init().then(() => {
-      this.id = this.$store.getters.getUser.id
-      this.username = this.$store.getters.getUser.username
-      this.avatar = this.$store.getters.getUser.avatar
-      this.type = this.$store.getters.getUser.type
+      this.userInfo = this.$store.getters.getUser
+      console.log(this.userInfo)
     })
 
   
@@ -161,6 +160,7 @@ export default {
       IconMenu,
       SetUp,
       Download,
+      Setting,
   },
   computed: {
 

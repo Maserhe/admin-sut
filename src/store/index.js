@@ -18,9 +18,9 @@ export default createStore({
     },
     REMOVE_INFO: (state) => {
       state.token = ''
-      state.userInfo = {}
+      state.userInfo = null
       localStorage.setItem("token", '')
-      sessionStorage.setItem("userInfo", JSON.stringify(''))
+      sessionStorage.setItem("userInfo", JSON.stringify(state.userInfo))
     }
 
   },
@@ -30,6 +30,7 @@ export default createStore({
     getUser: state => {
       return state.userInfo
     },
+
     getToken: state => {
       return state.token
     }
