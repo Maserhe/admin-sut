@@ -22,6 +22,84 @@
 
                     <template #default="scope">
                         <el-button type="danger"  size="mini" @click="handleClick(scope.row.id)">删除</el-button>
+                        <el-button type="danger" size="mini" @click="dialogVisible = true">导入学生</el-button>
+
+                        <!-- 对话框 -->
+                        <el-dialog
+                            v-model="dialogVisible"
+                            title="添加学生"
+                            width="30%"
+                            :before-close="handleClose"
+                        >
+                            <el-tabs type="border-card">
+                                <el-tab-pane label="文件导入">
+                                    <el-upload
+                                        class="upload-demo"
+                                        drag
+                                        action=""
+                                        :http-request="uploadFile"
+                                        :data="{ 'id': scope.row.id }"
+                                    >
+                                        <el-icon class="el-icon--upload"><upload-filled /></el-icon>
+                                        <div class="el-upload__text">
+                                        拖拽文件到这或者 <em>点击上传</em>
+                                        </div>
+                                        <template #tip>
+                                        <div class="el-upload__tip">
+                                            请上传指定格式的csv文件
+                                        </div>
+                                        </template>
+                                    </el-upload>
+
+                                </el-tab-pane>
+                                <el-tab-pane label="手动添加">
+                                    <el-form
+                                        ref="stuInfo"
+                                        :model="stuInfo"
+                                        label-width="100px"
+                                    >
+                                    <el-form-item label="姓名" prop="name"
+                                        :rules="[
+                                            { required: true, message: '姓名必须填写,例如 张三' },
+                                        ]"
+                                    >
+                                    <el-input v-model.number="stuInfo.name" autocomplete="off"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="学号" prop="number"
+                                        :rules="[
+                                            { required: true, message: '专业必须填写,例如 180405218' },
+                                        ]"
+                                    >
+                                    <el-input v-model.number="stuInfo.number" autocomplete="off"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="密码" prop="password"
+                                        :rules="[
+                                            { required: true, message: '密码必须填写,例如 123456' },
+                                        ]"
+                                    >
+                                    <el-input v-model.number="stuInfo.password" autocomplete="off"></el-input>
+                                    </el-form-item>
+                                    <el-form-item>
+                                    <el-button type="primary" @click="addStudent('stuInfo', scope.row.id )">添加</el-button>
+
+                                    <el-button @click="resetForm('stuInfo')">重置</el-button>
+                                    </el-form-item>
+                                    </el-form>
+                                </el-tab-pane>
+                            </el-tabs>
+
+
+                            <template #footer>
+                                <span class="dialog-footer">
+                                    <el-button @click="dialogVisible = false">取消</el-button>
+                                    <el-button type="primary" @click="dialogVisible = false"
+                                    >确定</el-button
+                                    >
+                                </span>
+                            </template>
+                        </el-dialog>
+
+
                     </template>
                 </el-table-column>
         
@@ -37,13 +115,11 @@
                 :model="stuClass"
                 label-width="100px"
             >
-
             <el-form-item label="年级" prop="grade"
                 :rules="[
                     { required: true, message: '年级必须填写,例如 2018' },
                 ]"
             >
-
             <el-input v-model.number="stuClass.grade" autocomplete="off"></el-input>
             </el-form-item>
 
@@ -68,22 +144,24 @@
 
 
             <el-form-item>
-            <el-button type="primary" @click="submitForm('stuClass')">添加</el-button>
+            <el-button type="primary" @click="submitForm('stuClass', 'scope.row.id')">添加</el-button>
 
             <el-button @click="resetForm('stuClass')">重置</el-button>
             </el-form-item>
 
-    </el-form>
+            </el-form>
         </el-tab-pane>
-        <el-tab-pane label="导入学生">
-            添加学生
+        
+        <el-tab-pane label="查看学生">
+            查看学生
             
         </el-tab-pane>
         
-        <el-tab-pane label="Task">
-            Task
+        <el-tab-pane label="添加学生">
+            添加学生
         
         </el-tab-pane>
+
     </el-tabs>
 
 
@@ -98,9 +176,30 @@
 </template>
 
 <script>
-import { ElMessage } from 'element-plus'
+import { ElMessage , ElMessageBox } from 'element-plus'
+import { ref } from 'vue'
+import { UploadFilled } from '@element-plus/icons'
+
 export default {
     name: "ClassSetUp",
+
+    setup() {
+        const dialogVisible = ref(false)
+
+        const handleClose = (done) => {
+        ElMessageBox.confirm('确定关闭对话框?')
+            .then(() => {
+            done()
+            })
+            .catch(() => {
+            // catch error
+            })
+        }
+        return {
+            dialogVisible,
+            handleClose,
+        }
+  },
 
     created() {
         // 初始化数据 班级数据
@@ -117,6 +216,12 @@ export default {
                 grade: "",
                 classNumber: "",
 
+            },
+
+            stuInfo: {
+                name: "",
+                number: "",
+                password: "",
             },
 
             classList: [],
@@ -180,7 +285,70 @@ export default {
             Location.reload()
         },
 
+        addStudent(formName, classId) {
+            this.$refs[formName].validate((valid) => {
+                
+                // console.log(valid, this.stuInfo.name, this.stuInfo.password, this.stuInfo.number)
+                // console.log(classId)
+
+                if (valid) {
+                    // 1, 开始添加数据
+                    this.$axios.post("/user/addStu", {
+                        "username": this.stuInfo.number, // 学号
+                        "name": this.stuInfo.name,   // 姓名
+                        "password": this.stuInfo.password,
+                        "type": 2,
+                        "classId": classId,
+
+                    }).then(res => {
+                        const data = res.data
+                        if (data.code == 200) {
+                            ElMessage.success('添加成功', {duration: 3 * 1000})
+                            this.stuInfo.number = ""
+                            this.stuInfo.name = ""
+                            this.stuInfo.password = ""
+                        }
+                    })
+                } else {
+                    console.log('error submit!!')
+                    return false
+                }
+            })
+            
+        },
+        uploadFile(params) {
+            
+            let formData = new FormData()
+            formData.append("file", params.file)
+            formData.append("id", params.data.id)
+
+            console.log(formData)
+            console.log("+++++++++++=")
+
+            this.$axios({
+                url: "/user/upload",
+                method: 'post',
+                data: formData,
+                headers: { 'Content-Type': 'multipart/form-data'}
+            }).then(res=> {
+                
+                const data = res.data
+                if (data.code == 200) {
+                    console.log("上传成功")
+                    ElMessage.success('添加成功', {duration: 3 * 1000})
+                } else {
+                    console.log('error submit!!')
+                    return false
+                }
+            })
+            
+        }
+
     },
+    components: {
+        UploadFilled,
+    }
+    
 }
 </script>
 

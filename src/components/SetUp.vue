@@ -43,6 +43,8 @@ export default {
     methods: {
         handleClick(tab, event) {
             console.log(tab, event)
+            location.reload()
+            console.log("重新加载")
         },
 
     },
