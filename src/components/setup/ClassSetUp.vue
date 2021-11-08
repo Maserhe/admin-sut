@@ -22,7 +22,7 @@
 
                     <template #default="scope">
                         <el-button type="danger"  size="mini" @click="handleClick(scope.row.id)">删除</el-button>
-                        <el-button type="danger" size="mini" @click="dialogVisible = true">导入学生</el-button>
+                        <el-button type="danger" size="mini" @click="dialogVisible = true">学生管理</el-button>
 
                         <!-- 对话框 -->
                         <el-dialog
@@ -88,7 +88,6 @@
                                 </el-tab-pane>
                             </el-tabs>
 
-
                             <template #footer>
                                 <span class="dialog-footer">
                                     <el-button @click="dialogVisible = false">取消</el-button>
@@ -153,8 +152,7 @@
         </el-tab-pane>
         
         <el-tab-pane label="查看学生">
-            查看学生
-            
+            <stu-set-up></stu-set-up>
         </el-tab-pane>
         
         <el-tab-pane label="添加学生">
@@ -163,11 +161,6 @@
         </el-tab-pane>
 
     </el-tabs>
-
-
-
-
-
 
     
   </div>
@@ -179,6 +172,7 @@
 import { ElMessage , ElMessageBox } from 'element-plus'
 import { ref } from 'vue'
 import { UploadFilled } from '@element-plus/icons'
+import StuSetUp from './StuSetUp.vue'
 
 export default {
     name: "ClassSetUp",
@@ -206,7 +200,6 @@ export default {
         this.init()
 
     },
-
     data() {
         return {
 
@@ -322,8 +315,8 @@ export default {
             formData.append("file", params.file)
             formData.append("id", params.data.id)
 
-            console.log(formData)
-            console.log("+++++++++++=")
+            // console.log(formData)
+            // console.log("+++++++++++=")
 
             this.$axios({
                 url: "/user/upload",
@@ -336,6 +329,7 @@ export default {
                 if (data.code == 200) {
                     console.log("上传成功")
                     ElMessage.success('添加成功', {duration: 3 * 1000})
+                    location.reload()
                 } else {
                     console.log('error submit!!')
                     return false
@@ -347,6 +341,7 @@ export default {
     },
     components: {
         UploadFilled,
+        StuSetUp,
     }
     
 }
