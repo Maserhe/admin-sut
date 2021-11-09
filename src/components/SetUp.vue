@@ -5,11 +5,9 @@
     <el-tab-pane label="班级管理">
         <class-set-up></class-set-up>
 
-    
-    
     </el-tab-pane>
     <el-tab-pane label="课程管理">
-        课程管理
+        <course-set-up></course-set-up>
         
     </el-tab-pane>
     <el-tab-pane label="学生管理">
@@ -28,7 +26,7 @@
 
 <script>
 import ClassSetUp from './setup/ClassSetUp.vue'
-
+import CourseSetUp from './setup/CourseSetUp.vue'
 
 export default {
     name: "SetUp",
@@ -43,13 +41,13 @@ export default {
     methods: {
         handleClick(tab, event) {
             console.log(tab, event)
-            location.reload()
             console.log("重新加载")
         },
 
     },
     components: {
         ClassSetUp,
+        CourseSetUp,
     }
 }
 </script>

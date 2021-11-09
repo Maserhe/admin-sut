@@ -23,6 +23,7 @@
                 <template #default="scope">
                     <el-button type="danger"  size="mini" @click="handleClick(scope.row.id)">删除</el-button>
                 </template>
+
             </el-table-column>        
 
         </el-table>
@@ -59,14 +60,14 @@ export default {
 
         stuVisable: false,
         tableData: [],
+        classId: "",
       }
   },
   methods: {
-      changeItem(val) {
-          console.log(val)
-          // 1， 根据 班级号获取 班里的学生
-          this.$axios.get("/user/getAllStu?classId=" + val).then(res => {
 
+      getStuList(val) {
+          this.$axios.get("/user/getAllStu?classId=" + val).then(res => {
+              
               const data = res.data
               if (data.code == 200) {
                   ElMessage.success('获取数据成功', {duration: 3 * 1000})
@@ -76,11 +77,40 @@ export default {
                   ElMessage.error('获取数据失败', {duration: 3 * 1000})
               }
           })
+      },
 
+      changeItem(val) {
+          this.classId = val
+          // console.log(val)
+          // 1， 根据 班级号获取 班里的学生
+          this.getStuList(val)
       },
 
       handleClick(id) {
-         console.log(id)
+        // 删除用户
+        console.log(id) 
+        // 根据id 删除用户
+        this.$axios.get("/user/delete?id="+ id).then(res => {
+            const data = res.data
+            if (data.code == 200 && data.data == true) {
+                ElMessage.success('删除用户', {duration: 3 * 1000})
+                const classId = this.classId
+                if (classId != null && classId != "") {
+                    console.log(classId)
+                }
+                this.getStuList(classId)
+
+            } else {
+                ElMessage.error('删除用户失败', {duration: 3 * 1000})
+
+            }
+
+
+        })
+
+
+        
+
       },
   }
 }
