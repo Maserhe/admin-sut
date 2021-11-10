@@ -33,8 +33,9 @@
                         >
                             <el-tabs type="border-card">
                                 <el-tab-pane label="文件导入">
+                                    
+                                    <div style="text-align: center"> 
                                     <el-upload
-                                        class="upload-demo"
                                         drag
                                         action=""
                                         :http-request="uploadFile"
@@ -44,13 +45,15 @@
                                         <div class="el-upload__text">
                                         拖拽文件到这或者 <em>点击上传</em>
                                         </div>
+
                                         <template #tip>
                                         <div class="el-upload__tip">
                                             请上传指定格式的csv文件
                                         </div>
                                         </template>
                                     </el-upload>
-
+                                    <el-button type="primary" @click="downloadAttachRow">模版下载</el-button>
+                                    </div>
                                 </el-tab-pane>
                                 <el-tab-pane label="手动添加">
                                     <el-form
@@ -155,10 +158,7 @@
             <stu-set-up></stu-set-up>
         </el-tab-pane>
         
-        <el-tab-pane label="添加学生">
-            添加学生
-        
-        </el-tab-pane>
+       
 
     </el-tabs>
 
@@ -315,9 +315,6 @@ export default {
             formData.append("file", params.file)
             formData.append("id", params.data.id)
 
-            // console.log(formData)
-            // console.log("+++++++++++=")
-
             this.$axios({
                 url: "/user/upload",
                 method: 'post',
@@ -336,6 +333,10 @@ export default {
                 }
             })
             
+        },
+        /** 下载附件 */
+        downloadAttachRow() {
+            window.open('http://localhost:8080/downloadFile/file.csv', '_blank')
         }
 
     },

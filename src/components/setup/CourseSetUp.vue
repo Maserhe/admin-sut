@@ -77,15 +77,18 @@
         style="width: 100%">
         <el-table-column prop="title" label="课程名" width="180" />
         <el-table-column prop="description" label="描述" width="180" />
-
+        <el-table-column prop="teacherName" label="教师名" width="180" />
+        
         <el-table-column align="right" >
 
             <template #header>
                     <el-input v-model="search"  size="mini" placeholder="输入课程标题或者课程介绍" />
             </template>
+
             <template #default="scope">
                 <el-button type="danger"  size="mini" @click="handleClick(scope.row.id)">删除</el-button>
             </template>
+
         </el-table-column>        
     </el-table>
 
@@ -144,6 +147,7 @@ export default {
                 img: "",
                 description: "",
                 classId: "",
+                teacherId: "",
             },
         }
     },
@@ -223,6 +227,10 @@ export default {
                 
                 if (valid) {
                     console.log(valid, this.courseInfo)
+
+                    const userinfo = this.$store.getters.getUser
+                    this.courseInfo.teacherId = userinfo.id
+                    
                     this.$axios.post("/course/add", this.courseInfo).then(res => {
                         const data = res.data
                         if (data.code == 200 && data.data == true) {
