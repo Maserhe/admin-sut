@@ -60,15 +60,14 @@
             </el-form-item>
         </el-form>
         
-
-        <template #footer>
+        <!-- <template #footer>
             <span class="dialog-footer">
                 <el-button @click="dialogVisible = false">取消</el-button>
                 <el-button type="primary" @click="dialogVisible = false"
                 >确定</el-button
                 >
             </span>
-        </template>
+        </template> -->
 
     </el-dialog>
 
@@ -87,10 +86,33 @@
 
             <template #default="scope">
                 <el-button type="danger"  size="mini" @click="handleClick(scope.row.id)">删除</el-button>
+                <el-button type="primary"  size="mini" @click="courseClick(scope.row.id)">管理</el-button>
             </template>
 
         </el-table-column>        
     </el-table>
+
+
+    <!-- 课程管理对话框 -->
+    <el-dialog
+        v-model="courseVisible"
+        title="课程管理"
+        width="40%"
+        :before-close="handleClose"
+    >
+        <create-task :courseId="courseId" v-model="courseId"></create-task>
+
+        <!-- <template #footer>
+            <span class="dialog-footer">
+                <el-button @click="courseVisible = false">Cancel</el-button>
+                <el-button type="primary" @click="courseVisible = false"
+                >Confirm</el-button
+                >
+            </span>
+        </template> -->
+
+    </el-dialog>
+
 
   </div>
 </template>
@@ -99,12 +121,14 @@
 import { ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { Upload } from '@element-plus/icons'
+import CreateTask from '../course/CreateTask'
 
 export default {
     name: "CourseSetUp",
 
     setup() {
         const dialogVisible = ref(false)
+        const courseVisible = ref(false)
         const handleClose = (done) => {
         ElMessageBox.confirm('确定关闭对话框?')
             .then(() => {
@@ -117,6 +141,7 @@ export default {
         return {
             dialogVisible,
             handleClose,
+            courseVisible,
         }
     },
 
@@ -136,6 +161,8 @@ export default {
 
     data() {
         return {
+            courseId: "",
+
             options: [],
             search: '',
             option: '选择班级',
@@ -251,6 +278,11 @@ export default {
                     return false
                 }
             })
+       },
+
+       courseClick(id) {
+           this.courseVisible = true
+           this.courseId = id
        }
 
     },
@@ -264,6 +296,7 @@ export default {
 
     components: {
         Upload,
+        CreateTask,
     }
 
 }
