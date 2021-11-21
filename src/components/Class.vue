@@ -1,91 +1,115 @@
 <template>
   <div>
-    <h1>我的课程</h1>
+    <h2>我的课程</h2>
     <el-divider></el-divider>
 
     <el-row :gutter="20" class="el-row" type="flex" >
       <el-col :span="8" v-for = "(item,index) in courses" v-model="courses" :key="index" class="el-col" >
         <el-card class="el-card" :key="index" onclick="">
+
+          <img :src="'http://localhost:8080/downloadFile/' + item.img"  class="image"/>
+
           <div slot="header" class="clearfix">
-            <span>{{item.title}}</span>
+
+            <el-tooltip placement="top" :content="'课程描述: ' + item.description">
+
+              <span>{{item.title}}</span>
+            </el-tooltip>
           </div>
 
           <div >
             <div class="text item">
-
-              <div>
-                 <!-- <img
-                  src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-                  class="image"
-                /> -->
-              </div>
-
-              <div class="item_tag" >
-                <span>课程描述</span>
-              </div>
-
-              <div class="item_desr">
-                <span > {{item.description}}</span>
-              </div>
-
+             <el-button type="primary" class="btn" @click="gotoCourse(item.id)">进入课程</el-button>
             </div>
           </div>  
+          
         </el-card>
       </el-col>  
     </el-row>
 
+    <!-- 对话框 -->
+    <el-dialog
+      v-model="dialogVisible"
+      title="课程管理"
+      width="80%"
+      :before-close="handleClose"
+  >
+    <div>
+      <commit-work :courseId = "courseId" v-model="courseId"></commit-work>
+    </div>
+    </el-dialog>
   </div>
 
 </template>
 
 <script>
+import { ref } from 'vue'
+import { ElMessageBox } from 'element-plus'
+import CommitWork from './class/CommitWork'
+
 export default {
-    components: {
 
-    },
-    name: "Class",
-    created() {
-      // 1, 初始化数据
-      this.userInfo = this.$store.getters.getUser
-      this.init()
+  setup() {
+      const dialogVisible = ref(false)
 
-    },
-
-    methods: {
-      // 1, 获取所有课程
-      init() {
-        const classId = this.userInfo.classId
-        this.$axios.get("/course/getAll?classId=" + classId).then(res => {
-          const data = res.data
-          if (data.code == 200) {
-            console.log(data)
-            this.courses = data.data
-          } else {
-            console.log("数据获取失败")
-          }
-
-        })
-
+      const handleClose = (done) => {
+        ElMessageBox.confirm('确定关闭对话框')
+          .then(() => {
+            done()
+          })
+          .catch(() => {
+            // catch error
+          })
       }
-
-    },
-    data() {
       return {
-        userInfo: "",
-        msg: "123",
-        apps: [
-          {tag: '123', appname: '123'},
-          {tag: '123', appname: '456'},
-          {tag: '123', appname: '123'},
-          {tag: '123', appname: '456'},
-          {tag: '123', appname: '123'},
-          {tag: '123', appname: '456'},
-          {tag: '123', appname: '123'},
-          {tag: '123', appname: '456'},
-        ],
-        courses: []
+        dialogVisible,
+        handleClose,
       }
+  },
+
+
+  components: {
+    CommitWork,
+  },
+  name: "Class",
+  created() {
+    // 1, 初始化数据
+    this.userInfo = this.$store.getters.getUser
+    this.init()
+
+  },
+
+  methods: {
+    // 1, 获取所有课程
+    init() {
+      const classId = this.userInfo.classId
+      this.$axios.get("/course/getAll?classId=" + classId).then(res => {
+        const data = res.data
+        if (data.code == 200) {
+          console.log(data)
+          this.courses = data.data
+        } else {
+          console.log("数据获取失败")
+        }
+
+      })
     },
+
+    gotoCourse(id) {
+      console.log(id)
+      this.dialogVisible = true
+      this.courseId = id
+    }
+
+  },
+  data() {
+    return {
+      userInfo: "",
+      courses: [],
+      courseId: "",
+
+    }
+  },
 
 
 }
@@ -137,6 +161,15 @@ export default {
   font-family: "Microsoft YaHei";
   color: #909399;
 }
- 
 
+.image {
+  width: 100%;
+  display: block;
+  height: 150px;
+}
+
+.btn {
+  width: 100%;
+  background-color: cyan;
+}
 </style>

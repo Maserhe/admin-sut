@@ -19,7 +19,7 @@
 
       </el-menu-item>
 
-      <el-menu-item index="/home/Class">
+      <el-menu-item index="/home/Class"  v-if=" userInfo.type === 2 ">
           <el-icon><set-up /></el-icon>    
           <span>课程</span> 
       </el-menu-item>

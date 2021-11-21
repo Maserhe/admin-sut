@@ -1,9 +1,7 @@
 <template>
   <div>
     <el-tabs v-model="activeName" @tab-click="handleClick">
-
     <el-tab-pane label="作业列表" name="first">
-
       <el-table :data="tableData" style="width: 100%">
         
         <el-table-column prop="taskName" label="作业名" width="120" />
