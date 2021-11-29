@@ -134,7 +134,7 @@ export default {
        },
 
        downloadFile(file) {
-           window.open('http://localhost:8080/downloadFile/' + file, '_blank')
+           window.open(this.$downLoad + file, '_blank')
        }
 
     },

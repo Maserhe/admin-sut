@@ -194,6 +194,7 @@ export default {
         resetHomework() {
            this.fileUrl = ""
            this.imgs_url = []
+           this.imgsName = []
         }
 
     },

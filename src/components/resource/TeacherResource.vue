@@ -7,11 +7,11 @@
       <el-col :span="8" v-for = "(item,index) in courses" v-model="courses" :key="index" class="el-col" >
         <el-card class="el-card" :key="index" onclick="">
 
-          <img :src="'http://localhost:8080/downloadFile/' + item.img"  class="image"/>
+          <img :src="$downLoad + item.img"  class="image"/>
 
           <div slot="header" class="clearfix">
             
-            <p>{{item.grade}}级{{item.major}}</p>
+            <p>{{item.grade}}级{{item.major}} {{item.classNumber}} 班 </p>
             <el-tooltip placement="top" :content="'课程描述: ' + item.description">
               <span>{{item.title}}</span>
             </el-tooltip>

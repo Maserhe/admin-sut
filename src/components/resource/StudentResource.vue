@@ -7,7 +7,7 @@
       <el-col :span="8" v-for = "(item,index) in courses" v-model="courses" :key="index" class="el-col" >
         <el-card class="el-card" :key="index" onclick="">
 
-          <img :src="'http://localhost:8080/downloadFile/' + item.img"  class="image"/>
+          <img :src="$downLoad  + item.img"  class="image"/>
 
           <div slot="header" class="clearfix">
 
@@ -108,7 +108,7 @@ export default {
             this.dialogVisible = true
         },
         downloadFile(file) {
-           window.open('http://localhost:8080/downloadFile/' + file, '_blank')
+           window.open(this.$downLoad  + file, '_blank')
        },
        getResource() {
          this.$axios.get("/resource/getAll?courseId=" + this.courseId).then(res => {

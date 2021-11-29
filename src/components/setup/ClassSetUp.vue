@@ -22,16 +22,19 @@
 
                     <template #default="scope">
                         <el-button type="danger"  size="mini" @click="handleClick(scope.row.id)">删除</el-button>
-                        <el-button type="danger" size="mini" @click="dialogVisible = true">学生管理</el-button>
+                        <el-button type="danger" size="mini" @click="showDialog(scope.row.id)">学生管理</el-button>
 
                         <!-- 对话框 -->
                         <el-dialog
                             v-model="dialogVisible"
                             title="添加学生"
-                            width="30%"
+                            width="40%"
                             :before-close="handleClose"
+                            center
+                            :destroy-on-close="true"
                         >
-                            <el-tabs type="border-card">
+                            
+                            <el-tabs type="border-card" >
                                 <el-tab-pane label="文件导入">
                                     
                                     <div style="text-align: center"> 
@@ -39,7 +42,7 @@
                                         drag
                                         action=""
                                         :http-request="uploadFile"
-                                        :data="{ 'id': scope.row.id }"
+                                        :data="{ 'id': addStuClassId }"
                                     >
                                         <el-icon class="el-icon--upload"><upload-filled /></el-icon>
                                         <div class="el-upload__text">
@@ -82,6 +85,7 @@
                                     >
                                     <el-input v-model.number="stuInfo.password" autocomplete="off"></el-input>
                                     </el-form-item>
+
                                     <el-form-item>
                                     <el-button type="primary" @click="addStudent('stuInfo', scope.row.id )">添加</el-button>
 
@@ -91,14 +95,14 @@
                                 </el-tab-pane>
                             </el-tabs>
 
-                            <template #footer>
+                            <!-- <template #footer>
                                 <span class="dialog-footer">
                                     <el-button @click="dialogVisible = false">取消</el-button>
                                     <el-button type="primary" @click="dialogVisible = false"
                                     >确定</el-button
                                     >
                                 </span>
-                            </template>
+                            </template> -->
                         </el-dialog>
 
 
@@ -183,7 +187,7 @@ export default {
         const handleClose = (done) => {
         ElMessageBox.confirm('确定关闭对话框?')
             .then(() => {
-            done()
+                done()
             })
             .catch(() => {
             // catch error
@@ -220,6 +224,7 @@ export default {
             classList: [],
             search: '',
             
+            addStuClassId: "",
 
         }
     },
@@ -281,8 +286,8 @@ export default {
         addStudent(formName, classId) {
             this.$refs[formName].validate((valid) => {
                 
-                // console.log(valid, this.stuInfo.name, this.stuInfo.password, this.stuInfo.number)
-                // console.log(classId)
+                console.log(valid, this.stuInfo.name, this.stuInfo.password, this.stuInfo.number)
+                console.log(classId)
 
                 if (valid) {
                     // 1, 开始添加数据
@@ -291,7 +296,7 @@ export default {
                         "name": this.stuInfo.name,   // 姓名
                         "password": this.stuInfo.password,
                         "type": 2,
-                        "classId": classId,
+                        "classId": this.addStuClassId,
 
                     }).then(res => {
                         const data = res.data
@@ -336,7 +341,12 @@ export default {
         },
         /** 下载附件 */
         downloadAttachRow() {
-            window.open('http://localhost:8080/downloadFile/file.csv', '_blank')
+            window.open(this.$downLoad + 'file.csv', '_blank')
+        },
+
+        showDialog(val) {
+            this.dialogVisible = true 
+            this.addStuClassId = val
         }
 
     },
