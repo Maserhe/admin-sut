@@ -4,20 +4,16 @@
     <el-tabs type="card" @tab-click="handleClick">
     <el-tab-pane label="班级管理">
         <class-set-up></class-set-up>
-
     </el-tab-pane>
+    
     <el-tab-pane label="课程管理">
         <course-set-up></course-set-up>
-        
     </el-tab-pane>
+
     <el-tab-pane label="学生管理">
-        学生管理
-        
+        <stu-set-up></stu-set-up>
     </el-tab-pane>
-    <el-tab-pane label="作业管理">
-        作业管理
-    
-    </el-tab-pane>
+
     </el-tabs>
 
 
@@ -27,6 +23,7 @@
 <script>
 import ClassSetUp from './setup/ClassSetUp.vue'
 import CourseSetUp from './setup/CourseSetUp.vue'
+import StuSetUp from './setup/StuSetUp.vue'
 
 export default {
     name: "SetUp",
@@ -48,6 +45,7 @@ export default {
     components: {
         ClassSetUp,
         CourseSetUp,
+        StuSetUp,
     }
 }
 </script>

@@ -39,7 +39,7 @@
       <template #title>
           <el-icon>
             <el-image
-              :src="userInfo.avatar"
+              :src="$downLoad +  userInfo.avatar"
               class="ms-img"
             ></el-image>
           </el-icon>

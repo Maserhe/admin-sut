@@ -11,7 +11,7 @@
 
           <div slot="header" class="clearfix">
             
-            <p>{{item.grade}}级{{item.major}} {{item.classNumber}} 班 </p>
+            <p>{{item.grade}}级{{item.major}}</p>
             <el-tooltip placement="top" :content="'课程描述: ' + item.description">
               <span>{{item.title}}</span>
             </el-tooltip>

@@ -3,7 +3,7 @@
 
     <el-row :gutter="20">
     <el-col :span="9" :offset="6">
-      <el-avatar :size="200" :src="'userInfo.avatar'!== ''? userInfo.avatar :circleUrl" class="ms-head"></el-avatar>
+      <el-avatar :size="200" :src="'userInfo.avatar'!== ''?  $downLoad + userInfo.avatar :circleUrl" class="ms-head"></el-avatar>
     </el-col>
     </el-row>
     

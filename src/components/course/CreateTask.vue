@@ -9,6 +9,7 @@
         <el-table-column prop="scorePermission" label="打分权限" width="120" />
         <el-table-column prop="startTime" label="开始日期" width="120" />
         <el-table-column prop="stopTime" label="截止日期" width="120" />
+        <el-table-column prop="weight" label="权重" width="120" />
 
       <el-table-column>
         <template #default="scope">
@@ -27,6 +28,11 @@
 
       <el-form-item label="任务描述" prop="description" :rules="[{ required: true, message: '作业描述,例如 使用c++编程实现四则运算' },]">
         <el-input v-model.number="taskInfo.description" autocomplete="off"  :autosize="{ minRows: 2, maxRows: 4 }" type="textarea"></el-input>
+      </el-form-item>
+
+
+      <el-form-item label="打分权重" prop="weight" :rules="[{ required: true, message: '老师打分的权重, 值介于 0 ～ 1 之间' },]">
+        <el-input-number v-model.number="taskInfo.weight" :precision="2" :step="0.1" :max="1" />
       </el-form-item>
 
       <el-form-item label="查看权限">  
@@ -74,6 +80,7 @@
         <br>
 
         <el-form ref="taskInfo" :model="taskInfo" label-width="100px">
+
         <el-form-item label="作业名称" prop="taskName" :rules="[{ required: true, message: '作业名必须填写,例如 第一次上机' },]">
           <el-input v-model.number="taskInfo.taskName" autocomplete="off"></el-input>
         </el-form-item>
@@ -81,6 +88,10 @@
         <el-form-item label="任务描述" prop="description" :rules="[{ required: true, message: '作业描述,例如 使用c++编程实现四则运算' },]">
           <el-input v-model.number="taskInfo.description" autocomplete="off"  :autosize="{ minRows: 2, maxRows: 4 }" type="textarea"></el-input>
         </el-form-item>
+
+        <el-form-item label="打分权重" prop="weight" :rules="[{ required: true, message: '老师打分的权重, 值介于 0 ～ 1 之间' },]">
+          <el-input-number v-model.number="taskInfo.weight" :precision="2" :step="0.1" :max="1" />
+       </el-form-item>
 
         <el-form-item label="查看权限">  
           <el-switch v-model="viewPermission" ></el-switch>
@@ -158,6 +169,7 @@ export default {
           scorePermission: "",
           startTime: "",
           stopTime: "",
+          weight: 0.0,
         },
         
 
@@ -170,6 +182,7 @@ export default {
         this.$refs[formName].resetFields()
         this.viewPermission = false
         this.scorePermission = false
+        this.taskInfo.weight = 0.0
       },
       setParam() {
         this.taskInfo.startTime = this.commitTime[0]
@@ -223,7 +236,8 @@ export default {
             // 1, 发起请求
             let updateData = JSON.parse(JSON.stringify(this.taskInfo))
             updateData.id = this.taskId
-            console.log(updateData)
+
+            // console.log(updateData)
 
             this.$axios.post("/course-task/updateTask", updateData).then(res => {
               const data = res.data

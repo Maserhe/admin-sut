@@ -12,7 +12,6 @@
 
                 <el-table-column prop="grade" label="年级" />
                 <el-table-column prop="major" label="专业" />
-                <el-table-column prop="classNumber" label="班号" />
 
                 <el-table-column align="right" >
                     
@@ -21,7 +20,7 @@
                     </template>
 
                     <template #default="scope">
-                        <el-button type="danger"  size="mini" @click="handleClick(scope.row.id)">删除</el-button>
+                        <el-button type="danger"  size="mini" @click="deleteClass(scope.row.id)">删除</el-button>
                         <el-button type="danger" size="mini" @click="showDialog(scope.row.id)">学生管理</el-button>
 
                         <!-- 对话框 -->
@@ -86,6 +85,14 @@
                                     <el-input v-model.number="stuInfo.password" autocomplete="off"></el-input>
                                     </el-form-item>
 
+                                    <el-form-item label="班号" prop="classNumber"
+                                        :rules="[
+                                            { required: true, message: '班级必须填写,例如 1' },
+                                        ]"
+                                    >
+                                    <el-input v-model.number="stuInfo.classNumber" autocomplete="off"></el-input>
+                                    </el-form-item>
+
                                     <el-form-item>
                                     <el-button type="primary" @click="addStudent('stuInfo', scope.row.id )">添加</el-button>
 
@@ -95,14 +102,6 @@
                                 </el-tab-pane>
                             </el-tabs>
 
-                            <!-- <template #footer>
-                                <span class="dialog-footer">
-                                    <el-button @click="dialogVisible = false">取消</el-button>
-                                    <el-button type="primary" @click="dialogVisible = false"
-                                    >确定</el-button
-                                    >
-                                </span>
-                            </template> -->
                         </el-dialog>
 
 
@@ -138,17 +137,6 @@
             </el-form-item>
 
 
-            <el-form-item label="班级" prop="classNumber"
-                :rules="[
-                    { required: true, message: '班级必须填写,例如 1' },
-                    { type: 'number', message: '班级格式填写不对' },
-                ]"
-            >
-            <el-input v-model.number="stuClass.classNumber" autocomplete="off"></el-input>
-            </el-form-item>
-
-
-
             <el-form-item>
             <el-button type="primary" @click="submitForm('stuClass', 'scope.row.id')">添加</el-button>
 
@@ -158,12 +146,8 @@
             </el-form>
         </el-tab-pane>
         
-        <el-tab-pane label="查看学生">
-            <stu-set-up></stu-set-up>
-        </el-tab-pane>
         
-       
-
+    
     </el-tabs>
 
     
@@ -176,7 +160,6 @@
 import { ElMessage , ElMessageBox } from 'element-plus'
 import { ref } from 'vue'
 import { UploadFilled } from '@element-plus/icons'
-import StuSetUp from './StuSetUp.vue'
 
 export default {
     name: "ClassSetUp",
@@ -211,7 +194,6 @@ export default {
             stuClass: {
                 major: "",
                 grade: "",
-                classNumber: "",
 
             },
 
@@ -219,6 +201,7 @@ export default {
                 name: "",
                 number: "",
                 password: "",
+                classNumber: "",
             },
 
             classList: [],
@@ -245,7 +228,6 @@ export default {
                     this.$axios.post("/stu-class/addClass", {
 
                         "major": this.stuClass.major,
-                        "classNumber": this.stuClass.classNumber,
                         "grade": this.stuClass.grade
 
                     }).then(res => {
@@ -253,8 +235,8 @@ export default {
                         if (data.code == 200) {
                             ElMessage.success('添加成功', {duration: 3 * 1000})
                             this.stuClass.major = "",
-                            this.stuClass.classNumber = "",
                             this.stuClass.grade = ""
+                            this.init()
                         }
 
                     })
@@ -270,17 +252,18 @@ export default {
             this.$refs[formName].resetFields()
         },
 
-        handleClick(id) {
+        // 删除班级
+        deleteClass(id) {
             // 1， 先删除班级，
             this.$axios.post("/stu-class/delete?id=" + id).then(res => {
                 const data = res.data
                 if (data.code == 200) {
                     ElMessage.success('删除成功', {duration: 3 * 1000})
+                    // 2， 刷新数据
+                    this.init()
                 }
             })
-            // 2， 刷新数据
-            this.init()
-            Location.reload()
+
         },
 
         addStudent(formName, classId) {
@@ -297,6 +280,7 @@ export default {
                         "password": this.stuInfo.password,
                         "type": 2,
                         "classId": this.addStuClassId,
+                        "classNumber": this.stuInfo.classNumber,
 
                     }).then(res => {
                         const data = res.data
@@ -305,6 +289,7 @@ export default {
                             this.stuInfo.number = ""
                             this.stuInfo.name = ""
                             this.stuInfo.password = ""
+                            this.stuInfo.classNumber = ""
                         }
                     })
                 } else {
@@ -352,7 +337,6 @@ export default {
     },
     components: {
         UploadFilled,
-        StuSetUp,
     }
     
 }
