@@ -274,11 +274,11 @@ export default {
 
       handleSizeChange: function (size) {
         this.pagesize = size;
-        console.log(this.pagesize)
+        // console.log(this.pagesize)
       },
       handleCurrentChange: function(currentPage){
         this.currentPage = currentPage;
-        console.log(this.currentPage) 
+        // console.log(this.currentPage) 
       },
       handleUserList() {
         
@@ -286,7 +286,7 @@ export default {
 
       // 查看 作业
       lookUp(val) {
-        console.log(val)
+        // console.log(val)
         this.dialogVisible = true
         this.urls = val.imgs
         this.file = val.taskFile
@@ -332,7 +332,7 @@ export default {
           if (data.code == 200) {
             this.courseList = data.data
           } else {
-            console.log("数据获取失败")
+            ElMessage.error('获取数据失败', {duration: 3 * 1000})
           }
         })
       },
@@ -344,14 +344,14 @@ export default {
           if (data.code == 200) {
             this.taskList = data.data
           } else {
-            console.log("数据获取失败")
+            ElMessage.error('获取数据失败', {duration: 3 * 1000})
           }
         })
       },
 
       changeGrade(val) {
         this.grade = val
-        console.log(this.grade)
+        // console.log(this.grade)
       },
 
       changeCourse(val) {

@@ -61,7 +61,7 @@ export default {
 
              this.$axios.post('/login', this.ruleForm).then(res => {
 
-              console.log(res.data)
+              //console.log(res.data)
 
               const jwt = res.headers['authorization']
               const userInfo = res.data.data
@@ -69,12 +69,12 @@ export default {
               _this.$store.commit("SET_TOKEN", jwt)
               _this.$store.commit("SET_USERINFO", userInfo)
               // 获取
-              console.log(_this.$store.getters.getUser)
+              // console.log(_this.$store.getters.getUser)
               _this.$router.push("/home/homePage")
             })
            
           } else {
-            console.log('error submit!!');
+            // console.log('error submit!!');
             return false;
           }
         });

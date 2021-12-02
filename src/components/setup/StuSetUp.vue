@@ -95,9 +95,6 @@ export default {
             if (data.code == 200 && data.data == true) {
                 ElMessage.success('删除用户', {duration: 3 * 1000})
                 const classId = this.classId
-                if (classId != null && classId != "") {
-                    console.log(classId)
-                }
                 this.getStuList(classId)
 
             } else {

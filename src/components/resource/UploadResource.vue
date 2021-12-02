@@ -23,7 +23,7 @@
 
                     <el-form-item label="上机报告">
                         <el-upload
-                            action="http://localhost:8080/uploadFile"   
+                            action="$upLoad"   
                             :file-list="fileArr"    
                             :limit="1"  
                             drag

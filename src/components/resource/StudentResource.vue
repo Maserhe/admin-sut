@@ -93,16 +93,14 @@ export default {
             this.$axios.get("/course/getAll?classId=" + classId).then(res => {
                 const data = res.data
                 if (data.code == 200) {
-                console.log(data)
-                this.courses = data.data
+                  this.courses = data.data
                 } else {
-                console.log("数据获取失败")
+                    ElMessage.error('获取数据失败', {duration: 3 * 1000})
                 }
 
             })
         },
         gotoCourse(id) {
-            console.log(id)
             this.courseId = id
             this.getResource()
             this.dialogVisible = true

@@ -94,7 +94,7 @@
                                     </el-form-item>
 
                                     <el-form-item>
-                                    <el-button type="primary" @click="addStudent('stuInfo', scope.row.id )">添加</el-button>
+                                    <el-button type="primary" @click="addStudent('stuInfo')">添加</el-button>
 
                                     <el-button @click="resetForm('stuInfo')">重置</el-button>
                                     </el-form-item>
@@ -145,9 +145,6 @@
 
             </el-form>
         </el-tab-pane>
-        
-        
-    
     </el-tabs>
 
     
@@ -242,7 +239,6 @@ export default {
                     })
                     
                 } else {
-                    console.log('error submit!!')
                     return false
                 }
             })
@@ -266,11 +262,9 @@ export default {
 
         },
 
-        addStudent(formName, classId) {
+        addStudent(formName) {
             this.$refs[formName].validate((valid) => {
                 
-                console.log(valid, this.stuInfo.name, this.stuInfo.password, this.stuInfo.number)
-                console.log(classId)
 
                 if (valid) {
                     // 1, 开始添加数据
@@ -293,7 +287,6 @@ export default {
                         }
                     })
                 } else {
-                    console.log('error submit!!')
                     return false
                 }
             })
@@ -314,11 +307,9 @@ export default {
                 
                 const data = res.data
                 if (data.code == 200) {
-                    console.log("上传成功")
                     ElMessage.success('添加成功', {duration: 3 * 1000})
                     location.reload()
                 } else {
-                    console.log('error submit!!')
                     return false
                 }
             })

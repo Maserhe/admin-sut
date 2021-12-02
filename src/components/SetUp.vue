@@ -36,9 +36,9 @@ export default {
     },
 
     methods: {
-        handleClick(tab, event) {
-            console.log(tab, event)
-            console.log("重新加载")
+        handleClick() {
+            // console.log(tab, event)
+            // console.log("重新加载")
         },
 
     },

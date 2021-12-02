@@ -9,7 +9,7 @@
     text-color="#fff"
     active-text-color="#ffd04b"
     router
-    @select="handleSelect"
+    
   >
 
       <el-menu-item index="/home/homePage" class="ms-item">
@@ -19,7 +19,7 @@
 
       </el-menu-item>
 
-      <el-menu-item index="/home/Class"  v-if=" userInfo.type === 2 ">
+      <el-menu-item index="/home/Class"  v-if="isStudent">
           <el-icon><set-up /></el-icon>    
           <span>课程</span> 
       </el-menu-item>
@@ -29,7 +29,7 @@
           <span>资源</span>
       </el-menu-item>
 
-      <el-menu-item index="/home/setup" v-if=" userInfo.type === 1 ">
+      <el-menu-item index="/home/setup" v-if="isTeacher">
           <el-icon><setting /></el-icon>
           <span>管理</span>
       </el-menu-item>
@@ -39,7 +39,7 @@
       <template #title>
           <el-icon>
             <el-image
-              :src="$downLoad +  userInfo.avatar"
+              :src="getAvator"
               class="ms-img"
             ></el-image>
           </el-icon>
@@ -63,7 +63,8 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { getCurrentInstance, ref } from 'vue'
+
 import {
   Menu as IconMenu,
   SetUp,
@@ -80,14 +81,43 @@ export default {
     }
   },
   setup() {
+
       const activeIndex = ref('/home/homePage')
-      const handleSelect = (key, keyPath) => {
-          console.log(key, keyPath)
+      //  初始化数据
+      const token = localStorage.getItem('token')
+      const instance = getCurrentInstance().appContext.config.globalProperties;
+      
+      
+      if (instance.$isEmpty(token)) {
+        instance.$router.push('/login')
+        return false
+      } 
+
+      const userinfo = instance.$store.getters.getUser
+
+      if (instance.$isEmpty(userinfo)) {
+        // 根据凭证获取用户信息
+        instance.$axios.get("/getUserInfo", {
+          params:{            
+            "token": token,
+          }
+        }).then(res => {
+          //获取你需要用到的数据
+          // 把数据共享出去
+          if (res.data.code == 400 ) {
+            // 登陆凭证失效, 删除信息
+            instance.$store.commit("REMOVE_INFO")
+            instance.$router.push('/login')
+            return false
+          }
+          instance.$store.commit("SET_TOKEN", token)
+          instance.$store.commit("SET_USERINFO", res.data.data)
+          instance.$router.push('/home/homePage')
+        });
       }
 
       return {
           activeIndex,
-          handleSelect,
       }
   },
   
@@ -96,50 +126,12 @@ export default {
   },
 
   created() {
-    
-    this.init().then(() => {
-      this.userInfo = this.$store.getters.getUser
-      console.log(this.userInfo)
-    })
-
-  
+    this.userInfo = this.$store.getters.getUser
   },
 
 
 
   methods: {
-
-    async init() {
-      const token = localStorage.getItem('token')
-      console.log(this.$isEmpty(token))
-
-      if (this.$isEmpty(token)) {
-        this.$router.push('/login')
-      } 
-
-      const userinfo = this.$store.getters.getUser
-      if (this.$isEmpty(userinfo)) {
-        // 根据凭证获取用户信息
-        await this.$axios.get("/getUserInfo", {
-          params:{            
-            "token": token,
-          }
-        }).then(res => {
-          //获取你需要用到的数据
-          // 把数据共享出去
-          if (res.data.code == 401 ) {
-            // 登陆凭证失效
-            // 删除信息
-            this.$store.commit("REMOVE_INFO")
-            this.$router.push('/login')
-          }
-
-          this.$store.commit("SET_TOKEN", token)
-          this.$store.commit("SET_USERINFO", res.data.data)
-
-        });
-      }
-    },
 
     logout() {
       const _this = this
@@ -163,6 +155,18 @@ export default {
       Setting,
   },
   computed: {
+
+    getAvator() {
+      return this.$downLoad +  this.userInfo.avatar
+    },
+
+    isTeacher() {
+      return this.userInfo.type === 1
+    },
+
+    isStudent() {
+      return this.userInfo.type === 2
+    }
 
   }
 

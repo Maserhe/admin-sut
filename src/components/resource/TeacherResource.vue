@@ -86,17 +86,12 @@ export default {
       this.$axios.get("/course/getCourses?teacherId=" + this.userInfo.id).then(res => {
         const data = res.data
         if (data.code == 200) {
-          console.log(data)
           this.courses = data.data
-        } else {
-          console.log("数据获取失败")
-        }
-
+        } 
       })
     },
 
     gotoCourse(id) {
-      console.log(id)
       this.dialogVisible = true
       this.courseId = id
     }

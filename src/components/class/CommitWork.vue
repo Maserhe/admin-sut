@@ -30,7 +30,7 @@
         <el-form>
             <el-form-item label="运行截图">
                 <el-upload
-                    action="http://localhost:8080/uploadFile"   
+                    :action="upLoadFile"   
                     list-type="picture-card"   
                     :file-list="imgs_url"    
                     :limit="9"    
@@ -45,7 +45,7 @@
 
             <el-form-item label="上机报告">
                 <el-upload
-                    action="http://localhost:8080/uploadFile"   
+                    :action="upLoadFile"   
                     :file-list="fileArr"    
                     :limit="1"  
                     drag
@@ -133,7 +133,7 @@ export default {
             })
         },
         uploadTask(val) {
-            console.log(val)
+            // console.log(val)
             this.dialogVisible = true
             this.taskId = val
         },
@@ -208,6 +208,10 @@ export default {
         fileArr() {
             // 上传图片 显示默认图片
             return this.fileUrl ? [{ url: this.fileUrl }] : []
+        },
+
+        upLoadFile() {
+            return this.$updLoad
         }
     }
 

@@ -7,7 +7,7 @@
       <el-col :span="8" v-for = "(item,index) in courses" v-model="courses" :key="index" class="el-col" >
         <el-card class="el-card" :key="index" onclick="">
 
-          <img :src="'http://localhost:8080/downloadFile/' + item.img"  class="image"/>
+          <img :src="$downLoad + item.img"  class="image"/>
 
           <div slot="header" class="clearfix">
 
@@ -44,7 +44,7 @@
 
 <script>
 import { ref } from 'vue'
-import { ElMessageBox } from 'element-plus'
+import { ElMessageBox, ElMessage } from 'element-plus'
 import CommitWork from './class/CommitWork'
 
 export default {
@@ -86,17 +86,15 @@ export default {
       this.$axios.get("/course/getAll?classId=" + classId).then(res => {
         const data = res.data
         if (data.code == 200) {
-          console.log(data)
           this.courses = data.data
         } else {
-          console.log("数据获取失败")
+          ElMessage.error("请选择时间", {duration: 3 * 1000})
         }
 
       })
     },
 
     gotoCourse(id) {
-      console.log(id)
       this.dialogVisible = true
       this.courseId = id
     }

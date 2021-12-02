@@ -195,7 +195,7 @@ export default {
         this.$refs[formName].validate((valid) => {
           
           const len = this.commitTime.length
-          console.log(len)
+          // console.log(len)
           if (len < 2) {
             ElMessage.error("请选择时间", {duration: 3 * 1000})
             return
@@ -224,7 +224,7 @@ export default {
       updateTask() {
         this.$refs['taskInfo'].validate((valid) => {
           const len = this.commitTime.length
-          console.log(len)
+          // console.log(len)
           if (len < 2) {
             ElMessage.error("请选择时间", {duration: 3 * 1000})
             return
@@ -255,8 +255,8 @@ export default {
           }
         })
       },
-      handleClick(tab, event) {
-        console.log(tab, event)
+      handleClick() {
+        // tab, event
       },
 
       init() {

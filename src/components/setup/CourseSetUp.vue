@@ -33,7 +33,7 @@
             
             <el-form-item label="图片上传" prop="url">
             <el-upload
-                action="http://localhost:8080/uploadFile"   
+                action="$upLoad"   
                 list-type="picture-card"   
                 :file-list="fileArr"    
                 :limit="1"    
@@ -60,14 +60,6 @@
             </el-form-item>
         </el-form>
         
-        <!-- <template #footer>
-            <span class="dialog-footer">
-                <el-button @click="dialogVisible = false">取消</el-button>
-                <el-button type="primary" @click="dialogVisible = false"
-                >确定</el-button
-                >
-            </span>
-        </template> -->
 
     </el-dialog>
 
@@ -218,7 +210,6 @@ export default {
           }
         },
         handleClick(id) {
-            console.log("删除课程", id)
             // 删除课程
             this.$axios.post("/course/delete?courseId=" + id).then(res => {
                 const data = res.data
@@ -253,7 +244,6 @@ export default {
            this.$refs[formName].validate((valid) => {
                 
                 if (valid) {
-                    console.log(valid, this.courseInfo)
 
                     const userinfo = this.$store.getters.getUser
                     this.courseInfo.teacherId = userinfo.id
@@ -274,7 +264,6 @@ export default {
                     })
                     this.dialogVisible = false
                 } else {
-                    console.log('error submit!!')
                     return false
                 }
             })

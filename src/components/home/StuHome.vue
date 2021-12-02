@@ -195,7 +195,7 @@ export default {
       },
 
       lookUp(val) {
-        console.log(val)
+        // console.log(val)
         this.dialogVisible = true
         this.urls = val.imgs
       },
@@ -226,18 +226,19 @@ export default {
         })
       },
 
-      handleClick(tab, event) {
-        console.log(tab, event)
+      handleClick() {
+        // console.log(tab, event)
+
       },
 
       handleSizeChange: function (size) {
         this.pagesize = size;
-        console.log(this.pagesize)
+        // console.log(this.pagesize)
       },
 
       handleCurrentChange: function(currentPage){
         this.currentPage = currentPage;
-        console.log(this.currentPage) 
+        // console.log(this.currentPage) 
       },
       handleUserList() {
         
