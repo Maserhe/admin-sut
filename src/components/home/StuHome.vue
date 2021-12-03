@@ -203,6 +203,7 @@ export default {
       seeDescription(val) {
         ElMessageBox.alert(val, '作业描述', {
             confirmButtonText: 'OK',
+            customStyle: "width: 800px",
         })
       },
 
@@ -327,6 +328,5 @@ export default {
       margin-bottom: 0;
     }
   }
-
 </style>
 

@@ -4,19 +4,18 @@
     <el-divider></el-divider>
 
     <el-row :gutter="20" class="el-row" type="flex" >
-      <el-col :span="8" v-for = "(item,index) in courses" v-model="courses" :key="index" class="el-col" >
+      <el-col :span="4" v-for = "(item,index) in courses" v-model="courses" :key="index" class="el-col" >
         <el-card class="el-card" :key="index" onclick="">
-
-          <img :src="$downLoad  + item.img"  class="image"/>
+          
 
           <div slot="header" class="clearfix">
-
             <el-tooltip placement="top" :content="'课程描述: ' + item.description">
-
               <span>{{item.title}}</span>
             </el-tooltip>
           </div>
 
+          <img :src="$downLoad  + item.img"  class="image"/>
+          <el-divider></el-divider>
           <div >
             <div class="text item">
              <el-button type="primary" class="btn" @click="gotoCourse(item.id)">进入资源</el-button>
@@ -172,11 +171,14 @@ export default {
 .image {
   width: 100%;
   display: block;
-  height: 150px;
+  height: 220px;
 }
 
 .btn {
   width: 100%;
-  background-color: cyan;
+  color: #fff;
+  background-color: #337ab7;
+  border-color: #2e6da4;
 }
+
 </style>

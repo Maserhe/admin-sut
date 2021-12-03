@@ -4,16 +4,23 @@
     <el-tab-pane label="作业列表" name="first">
       <el-table :data="tableData" style="width: 100%">
         
-        <el-table-column prop="taskName" label="作业名" width="120" />
-        <el-table-column prop="viewPermission" label="查看权限" width="120" />
-        <el-table-column prop="scorePermission" label="打分权限" width="120" />
-        <el-table-column prop="startTime" label="开始日期" width="120" />
-        <el-table-column prop="stopTime" label="截止日期" width="120" />
-        <el-table-column prop="weight" label="权重" width="120" />
+        <el-table-column prop="taskName" label="作业名"  />
+        <el-table-column prop="viewPermission" label="查看权限"  />
+        <el-table-column prop="scorePermission" label="打分权限" />
+        <el-table-column prop="startTime" label="开始日期"  />
+        <el-table-column prop="stopTime" label="截止日期"  />
+        <el-table-column prop="weight" label="权重" />
 
       <el-table-column>
         <template #default="scope">
-          <el-button type="danger"  size="mini" @click="deleteTask(scope.row.id)">删除</el-button>
+          <!-- <el-button type="danger"  size="mini" @click="deleteTask(scope.row.id)">删除</el-button> -->
+
+          <el-popconfirm title="确定要删除该作业?" @confirm="deleteTask(scope.row.id)">
+            <template #reference>
+              <el-button size="mini" type="danger"> 删除作业</el-button>
+            </template>
+          </el-popconfirm>
+
         </template>
       </el-table-column>
       </el-table>
@@ -27,20 +34,45 @@
         </el-form-item>
 
       <el-form-item label="任务描述" prop="description" :rules="[{ required: true, message: '作业描述,例如 使用c++编程实现四则运算' },]">
-        <el-input v-model.number="taskInfo.description" autocomplete="off"  :autosize="{ minRows: 2, maxRows: 4 }" type="textarea"></el-input>
+        <el-input v-model.number="taskInfo.description" autocomplete="off"  :autosize="{ minRows: 3, maxRows: 5 }" type="textarea"></el-input>
       </el-form-item>
 
 
       <el-form-item label="打分权重" prop="weight" :rules="[{ required: true, message: '老师打分的权重, 值介于 0 ～ 1 之间' },]">
         <el-input-number v-model.number="taskInfo.weight" :precision="2" :step="0.1" :max="1" />
+        <label slot="lable">&nbsp;&nbsp;&nbsp; </label>
+        <el-tooltip
+          effect="dark"
+          content="这是老师的打分的权重,由老师打的分乘以该权重，然后加上学生打分的平均分乘以剩下的权重，最后加再一起得到加权分数 "
+          placement="right-start"
+        >
+        <el-button>提示</el-button>
+        </el-tooltip>
       </el-form-item>
 
       <el-form-item label="查看权限">  
         <el-switch v-model="viewPermission" ></el-switch>
+        <label slot="lable">&nbsp;&nbsp;&nbsp; </label>
+        <el-tooltip
+          effect="dark"
+          content="老师和学生查看作业的权限,关闭后老师和学生在首页作业列表中都看不到上传的作业。"
+          placement="right-start"
+        >
+        <el-button>提示</el-button>
+      </el-tooltip>
+
       </el-form-item>
 
       <el-form-item label="打分权限">  
         <el-switch v-model="scorePermission" ></el-switch>
+        <label slot="lable">&nbsp;&nbsp;&nbsp; </label>
+        <el-tooltip
+          effect="dark"
+          content="学生的打分的权限,关闭后学生无权限打分。上面的打分权重会失效,老师打多少分就是多少分。"
+          placement="right-start"
+        >
+        <el-button>提示</el-button>
+        </el-tooltip>
       </el-form-item>
 
       <el-form-item label="提交时间">
@@ -86,19 +118,43 @@
         </el-form-item>
 
         <el-form-item label="任务描述" prop="description" :rules="[{ required: true, message: '作业描述,例如 使用c++编程实现四则运算' },]">
-          <el-input v-model.number="taskInfo.description" autocomplete="off"  :autosize="{ minRows: 2, maxRows: 4 }" type="textarea"></el-input>
+          <el-input v-model.number="taskInfo.description" autocomplete="off"  :autosize="{ minRows: 3, maxRows: 5 }" type="textarea"></el-input>
         </el-form-item>
 
         <el-form-item label="打分权重" prop="weight" :rules="[{ required: true, message: '老师打分的权重, 值介于 0 ～ 1 之间' },]">
           <el-input-number v-model.number="taskInfo.weight" :precision="2" :step="0.1" :max="1" />
+          <label slot="lable">&nbsp;&nbsp;&nbsp; </label>
+        <el-tooltip
+          effect="dark"
+          content="这是老师的打分的权重,由老师打的分乘以该权重，然后加上学生打分的平均分乘以剩下的权重，最后加再一起得到加权分数 "
+          placement="right-start"
+        >
+        <el-button>提示</el-button>
+        </el-tooltip>
        </el-form-item>
 
         <el-form-item label="查看权限">  
           <el-switch v-model="viewPermission" ></el-switch>
+          <label slot="lable">&nbsp;&nbsp;&nbsp; </label>
+          <el-tooltip
+            effect="dark"
+            content="老师和学生查看作业的权限,关闭后老师和学生在首页作业列表中都看不到上传的作业。"
+            placement="right-start"
+          >
+             <el-button>提示</el-button>
+          </el-tooltip>
         </el-form-item>
 
         <el-form-item label="打分权限">  
           <el-switch v-model="scorePermission" ></el-switch>
+          <label slot="lable">&nbsp;&nbsp;&nbsp; </label>
+          <el-tooltip
+              effect="dark"
+              content="学生的打分的权限,关闭后学生无权限打分。上面的打分权重会失效,老师打多少分就是多少分。"
+              placement="right-start"
+            >
+            <el-button>提示</el-button>
+          </el-tooltip>
         </el-form-item>
 
         <el-form-item label="提交时间">

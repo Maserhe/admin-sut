@@ -6,9 +6,8 @@
       <el-tabs v-model="activeName" tab-position="left" @tab-click="handleClick">
         <el-tab-pane label="修改头像" name="first">
           
-          <div>
+          <div style="text-align: center">
               <el-upload
-                class="upload-demo"
                 :action="upLoadFile"
                 :show-file-list="false"
                 :on-success="handleAvatarSuccess"
@@ -27,7 +26,8 @@
           <el-form
                   ref="pass"
                   :model="pass"
-                  label-width="100px"
+                  label-width="120px"
+                  style="width: 600px"
               >
               <el-form-item label="老密码" prop="oldPass" :rules="[ { required: true, message: '老密码必须填写' },]" >
                 <el-input v-model.trim="pass.oldPass" autocomplete="off"></el-input>
@@ -102,7 +102,7 @@ export default {
       handleAvatarSuccess(res) {
         // 处理上传图标
         if (res.code === 200) {
-            this.imgs_url = res.data.fileDownloadUri
+            this.imgs_url = this.$downLoad + res.data.fileName
             this.imgsName = res.data.fileName
             ElMessage.success("图片上传成功", {duration: 3 * 1000})
         } else {
@@ -113,7 +113,7 @@ export default {
       // 更改头像
       changAvator() {
 
-        if (this.imgsName == "" || this.imgsName == null || this.imgsName == undefined) {
+        if (this.imgsName != "" || this.imgsName != null || this.imgsName != undefined) {
           
           this.$axios.post("/user/changeAvatar?id=" + this.userInfo.id + "&avatar=" + this.imgsName).then(res => {
             const data = res.data
@@ -183,25 +183,19 @@ export default {
 </script>
 
 <style scoped>
-.avatar-uploader .el-upload {
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-.avatar-uploader .el-upload:hover {
-  border-color: #409eff;
-}
+
+
 .avatar-uploader-icon {
   font-size: 28px;
   color: #8c939d;
   width: 178px;
   height: 178px;
   text-align: center;
+  border-style: dotted;
+  margin: 25px;
 }
 .avatar-uploader-icon svg {
-  margin-top: 74px; /* (178px - 28px) / 2 - 1px */
+  margin: 74px; /* (178px - 28px) / 2 - 1px */
 }
 .avatar {
   width: 178px;

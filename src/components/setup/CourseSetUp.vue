@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <el-select v-model="option" placeholder="Select" @change="changeItem">
         <el-option
         v-for="(item, index) in options"
@@ -10,6 +10,7 @@
 
         </el-option>
     </el-select>
+    <label slot="lable">&nbsp;&nbsp;&nbsp; </label>
     <el-button type="primary" size="small" @click="addCouseBtn()">添加课程</el-button>
 
     <el-dialog
@@ -33,7 +34,7 @@
             
             <el-form-item label="图片上传" prop="url">
             <el-upload
-                action="$upLoad"   
+                :action="upLoadFile"   
                 list-type="picture-card"   
                 :file-list="fileArr"    
                 :limit="1"    
@@ -66,9 +67,9 @@
 
     <el-table :data="tableData.filter((data) => !search || data.title.toLowerCase().includes(search.toLowerCase()) || data.description.toLowerCase().includes(search.toLowerCase()))" 
         style="width: 100%">
-        <el-table-column prop="title" label="课程名" width="180" />
-        <el-table-column prop="description" label="描述" width="180" />
-        <el-table-column prop="teacherName" label="教师名" width="180" />
+        <el-table-column prop="title" label="课程名"  />
+        <el-table-column prop="description" label="描述" />
+        <el-table-column prop="teacherName" label="教师名" />
         
         <el-table-column align="right" >
 
@@ -77,7 +78,12 @@
             </template>
 
             <template #default="scope">
-                <el-button type="danger"  size="mini" @click="handleClick(scope.row.id)">删除</el-button>
+                <!-- <el-button type="danger"  size="mini" @click="handleClick(scope.row.id)">删除</el-button> -->
+                <el-popconfirm title="确定要删除该课程?" @confirm="handleClick(scope.row.id)">
+                    <template #reference>
+                        <el-button size="mini" type="danger">删除</el-button>
+                    </template>
+                </el-popconfirm>
                 <el-button type="primary"  size="mini" @click="courseClick(scope.row.id)">管理</el-button>
             </template>
 
@@ -89,19 +95,11 @@
     <el-dialog
         v-model="courseVisible"
         title="课程管理"
-        width="40%"
+        width="60%"
         :before-close="handleClose"
     >
         <create-task :courseId="courseId" v-model="courseId"></create-task>
 
-        <!-- <template #footer>
-            <span class="dialog-footer">
-                <el-button @click="courseVisible = false">Cancel</el-button>
-                <el-button type="primary" @click="courseVisible = false"
-                >Confirm</el-button
-                >
-            </span>
-        </template> -->
 
     </el-dialog>
 
@@ -231,7 +229,7 @@ export default {
         handleAvatarSuccess(res) {
             // 处理上传图标
             if (res.code === 200) {
-                this.icon_url = res.data.fileDownloadUri
+                this.icon_url = this.$downLoad + res.data.fileName
                 this.courseInfo.img = res.data.fileName
                 ElMessage.success("图片上传成功", {duration: 3 * 1000})
             } else {
@@ -256,6 +254,7 @@ export default {
                             if (classId != null ) {
                                 // 重新获取课程列表
                                 this.getCourseList(classId)
+                                this.resetForm('courseInfo')
                             }
                         }else {
                             ElMessage.error('添加课程失败', {duration: 3 * 1000})
@@ -280,6 +279,10 @@ export default {
         fileArr() {
             // 上传图片 显示默认图片
             return this.icon_url ? [{ url: this.icon_url }] : []
+        },
+
+        upLoadFile() {
+            return this.$updLoad
         }
     },
 

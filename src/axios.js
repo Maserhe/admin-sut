@@ -3,7 +3,8 @@ import router from './router'
 import store from './store'
 import { ElMessage } from 'element-plus'
 
-axios.defaults.baseURL = "http://localhost:8080"
+// axios.defaults.baseURL = "http://localhost:8080/"
+axios.defaults.baseURL = "/"
 
 // 前置拦截
 axios.interceptors.request.use(config => {

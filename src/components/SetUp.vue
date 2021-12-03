@@ -14,6 +14,11 @@
         <stu-set-up></stu-set-up>
     </el-tab-pane>
 
+    <el-tab-pane label="添加管理员">
+       <admin-set-up></admin-set-up>
+    </el-tab-pane>
+
+
     </el-tabs>
 
 
@@ -24,6 +29,7 @@
 import ClassSetUp from './setup/ClassSetUp.vue'
 import CourseSetUp from './setup/CourseSetUp.vue'
 import StuSetUp from './setup/StuSetUp.vue'
+import AdminSetUp from './setup/AdminSetUp.vue'
 
 export default {
     name: "SetUp",
@@ -46,6 +52,7 @@ export default {
         ClassSetUp,
         CourseSetUp,
         StuSetUp,
+        AdminSetUp,
     }
 }
 </script>

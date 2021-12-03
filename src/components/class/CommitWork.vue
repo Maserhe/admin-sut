@@ -130,6 +130,7 @@ export default {
         seeDescription(val) {
             ElMessageBox.alert(val, '作业描述', {
                 confirmButtonText: 'OK',
+                customStyle: "width: 800px"
             })
         },
         uploadTask(val) {
@@ -141,7 +142,7 @@ export default {
         handleAvatarSuccess(res) {
             // 处理上传图标
             if (res.code === 200) {
-                this.imgs_url.push({ url: res.data.fileDownloadUri })
+                this.imgs_url.push({ url: this.$downLoad + res.data.fileName })
                 this.imgsName.push(res.data.fileName)
                 ElMessage.success("图片上传成功", {duration: 3 * 1000})
 
@@ -152,7 +153,7 @@ export default {
        fileUploadSuccess(res) {
             // 处理上传图标
             if (res.code === 200) {
-                this.fileUrl = res.data.fileDownloadUri
+                this.fileUrl = this.$downLoad + res.data.fileName
                 this.fileName = res.data.fileName
                 ElMessage.success("报告上传成功", {duration: 3 * 1000})
             } else {

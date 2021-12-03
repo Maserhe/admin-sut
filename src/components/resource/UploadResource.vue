@@ -23,7 +23,7 @@
 
                     <el-form-item label="上机报告">
                         <el-upload
-                            action="$upLoad"   
+                            :action="upLoadFile"   
                             :file-list="fileArr"    
                             :limit="1"  
                             drag
@@ -109,6 +109,8 @@ export default {
                 if (data.code == 200) {
                     ElMessage.success('添加课件成功', {duration: 3 * 1000})
                     this.init()
+                    this.resourceInfo.file = ""
+                    this.resourceInfo.fileName = ""
                 }
             })
         
@@ -149,6 +151,9 @@ export default {
         fileArr() {
             // 上传图片 显示默认图片
             return this.fileUrl ? [{ url: this.fileUrl }] : []
+        },
+        upLoadFile() {
+            return this.$updLoad
         }
     }
 

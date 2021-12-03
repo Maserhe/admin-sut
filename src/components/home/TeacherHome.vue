@@ -125,7 +125,7 @@
       <el-button type="primary" @click="downloadFile">下载报告</el-button>
       <el-button type="primary" @click="seeDescription">作业要求</el-button>
 
-      <el-button type="primary" @click="seeScore">打分详情</el-button>
+      <el-button type="primary" @click="seeScore">学生打分详情</el-button>
 
       <el-divider></el-divider>
       <label slot="lable"> 开始时间：{{ startTime }} &nbsp;&nbsp;&nbsp; 截止时间: {{ stopTime }}  &nbsp;&nbsp;&nbsp; 打分权限:{{ scorePermission }} &nbsp;&nbsp;&nbsp; 老师打分权重 {{ weight }} </label>
@@ -151,7 +151,7 @@
     </template>
     </el-dialog>
 
-    <el-dialog v-model="seeScoreVisible" title="打分详情" width="40%" :before-close="handleClose">
+    <el-dialog v-model="seeScoreVisible" title="学生打分详情" width="40%" :before-close="handleClose">
       <div>
         <el-table :data="taskGradeVoList" style="width: 100%">
           <el-table-column prop="author" label="打分人" />
@@ -264,6 +264,7 @@ export default {
       seeDescription() {
         ElMessageBox.alert(this.description, '作业描述', {
             confirmButtonText: 'OK',
+            customStyle: "width: 800px",
         })
       },
 

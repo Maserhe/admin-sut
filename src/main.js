@@ -20,8 +20,11 @@ const app = createApp(App)
 app.config.globalProperties.$axios = axios
 
 app.config.globalProperties.$isEmpty = isEmpty
-app.config.globalProperties.$downLoad = "http://localhost:8080/downloadFile/"
-app.config.globalProperties.$updLoad = "http://localhost:8080/uploadFile"
+// app.config.globalProperties.$downLoad = "http://localhost:8080/downloadFile/"
+// app.config.globalProperties.$updLoad = "http://localhost:8080/uploadFile"
+
+app.config.globalProperties.$downLoad = "/downloadFile/"
+app.config.globalProperties.$updLoad = "/uploadFile"
 
 app.use(ElementPlus, { locale })
 app.use(store).use(router).mount('#app')

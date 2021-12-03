@@ -11,9 +11,10 @@
         </el-select>
         <el-table :data="tableData.filter((data) => !search || data.username.toLowerCase().includes(search.toLowerCase()) || data.name.toLowerCase().includes(search.toLowerCase()))" 
             style="width: 100%">
-            <el-table-column prop="username" label="学号" width="180" />
-            <el-table-column prop="name" label="姓名" width="180" />
-            <el-table-column prop="password" label="密码" width="180" />
+            <el-table-column prop="classNumber" label="班级"/>
+            <el-table-column prop="username" label="学号"/>
+            <el-table-column prop="name" label="姓名" />
+            <el-table-column prop="password" label="密码" />
 
             <el-table-column align="right" >
 
@@ -21,7 +22,15 @@
                         <el-input v-model="search"  size="mini" placeholder="输入学生姓名或学号" />
                 </template>
                 <template #default="scope">
-                    <el-button type="danger"  size="mini" @click="handleClick(scope.row.id)">删除</el-button>
+                    <!-- <el-button type="danger"  size="mini" @click="handleClick(scope.row.id)">删除</el-button> -->
+                    
+                      <el-popconfirm title="确定要删除该学生?" @confirm="handleClick(scope.row.id)">
+                        <template #reference>
+                            <el-button size="mini" type="danger"> 删除</el-button>
+                        </template>
+                    </el-popconfirm>
+
+
                 </template>
 
             </el-table-column>        
@@ -101,14 +110,12 @@ export default {
                 ElMessage.error('删除用户失败', {duration: 3 * 1000})
 
             }
-
-
         })
-
-
-        
-
       },
+
+      clicktest(val) {
+          console.log(val)
+      }
   }
 }
 </script>

@@ -3,12 +3,13 @@
     <my-header></my-header>
     <div>
         <el-row :gutter="20" v-bind:style="{ margin: '50px' }"> 
-        <el-col :span="12" :offset="6">
-            <el-card>
+        <el-col :span="20" :offset="2">
 
+            <el-card>
               <router-view></router-view>
-              
             </el-card>
+
+
         </el-col>
         </el-row>
     </div>

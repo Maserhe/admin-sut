@@ -20,8 +20,14 @@
                     </template>
 
                     <template #default="scope">
-                        <el-button type="danger"  size="mini" @click="deleteClass(scope.row.id)">删除</el-button>
-                        <el-button type="danger" size="mini" @click="showDialog(scope.row.id)">学生管理</el-button>
+                        <el-popconfirm title="该班级学生会一起删除,确定要删除?" @confirm="deleteClass(scope.row.id)">
+                            <template #reference>
+                                <el-button size="mini" type="danger">删除班级</el-button>
+                            </template>
+                        </el-popconfirm>
+
+                        <!-- <el-button type="danger"  size="mini" @click="deleteClass(scope.row.id)">删除班级</el-button> -->
+                        <el-button type="primary" size="mini" @click="showDialog(scope.row.id)">添加学生</el-button>
 
                         <!-- 对话框 -->
                         <el-dialog
