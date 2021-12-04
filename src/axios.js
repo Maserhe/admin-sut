@@ -5,9 +5,16 @@ import { ElMessage } from 'element-plus'
 
 // axios.defaults.baseURL = "http://localhost:8080/"
 axios.defaults.baseURL = "/"
-
 // 前置拦截
 axios.interceptors.request.use(config => {
+  const token = localStorage.getItem("token")
+  if (token != null && token != undefined && token != undefined) {
+
+    config.headers.common['Access-control-Expose-Headers'] = "Authorization"
+    config.headers.Authorization= token
+    
+  }
+
   return config
 })
 

@@ -46,11 +46,26 @@
             </el-pagination>
 
         </el-tab-pane>
-        <el-tab-pane label="筛选(有权限打分)" name="second">
+        <el-tab-pane label="筛选" name="second">
+
+          
+          <!-- 筛选 -->
+          <label slot="lable"> &nbsp; &nbsp;课程:&nbsp; &nbsp; </label>
+          <el-select v-model="courseOption" placeholder="Select" @change="changeCourse" >
+            <el-option v-for="(item, index) in courseList" :key="index" :label="item.title" :value="item.id"> </el-option>
+          </el-select>
+
+          <label slot="lable"> &nbsp; &nbsp;作业:&nbsp; &nbsp; </label>
+        
+          <el-select v-model="taskOption" placeholder="选择作业"  @change="changeTask">
+            <el-option v-for="(item, index) in taskList" :key="index" :label="item.taskName" :value="item.id"></el-option>
+          </el-select>
+
+          <!-- 
           <el-select v-model="option" placeholder="Select" @change="changeItem">
             <el-option v-for="(item, index) in options" :key="index" :label="item.title" :value="item.id">
             </el-option>
-          </el-select>
+          </el-select> -->
           <el-divider></el-divider>
          <!-- table 表格 -->
         
@@ -80,7 +95,8 @@
                   <template #default="scope">
                 
                       <el-button type="primary" size="mini" @click="lookUp(scope.row)">查看</el-button>
-                      <el-button type="primary" size="mini" @click="rateScore(scope.row.id, scope.row.score)">打分</el-button>
+                      <el-button type="primary" size="mini" @click="rateScore(scope.row.id, scope.row.score)" v-if="scope.row.scorePermission == 1" >打分</el-button>
+                      <el-button type="primary" size="mini" disabled v-else >打分</el-button>
                   </template>
               </el-table-column>
 
@@ -118,7 +134,6 @@
       <span class="dialog-footer">
         <el-button @click="rateVisible = false">取消</el-button>
         <el-button type="primary" @click=scoring>确定</el-button>
-
       </span>
     </template>
     </el-dialog>
@@ -141,9 +156,8 @@ export default {
         userInfo: "",
 
         // 选择器
-        options: [],
-        option: '选择课程',
         courseId: "",
+        taskId: "",
         courseTaskList: [],
         taskSearch: "",
         urls: [],
@@ -152,6 +166,16 @@ export default {
         score: 0,
         homeworkId: "",
         scoreNow: "",
+
+
+        // 筛选
+        courseList: [],
+        courseOption: "选择课程",
+      
+        taskList: [],
+        taskOption: "选择作业",
+
+
 
       }
     },
@@ -212,14 +236,25 @@ export default {
         this.$axios.get("/course/getAll?classId=" + this.userInfo.classId).then(res => {
               const data = res.data
               if (data.code == 200) {
-                this.options = data.data
+                this.courseList = data.data
               } 
           })
       },
 
+      // 获取作业列表
       getCourseTaskList(val) {
 
-        this.$axios.post("/homework/getByCourseIdList?courseId=" + val +"&userId=" + this.userInfo.id).then(res => {
+        this.$axios.get("/course-task/getAll?courseId=" + val).then(res => {
+          const data = res.data
+          if (data.code == 200) {
+            this.taskList  = data.data
+          }
+        })
+      },
+
+      // 获取筛选的数据
+      getScrenHomeworkList(val) {
+        this.$axios.post("/homework//getByTaskIdList?taskId=" + val +"&userId=" + this.userInfo.id).then(res => {
           const data = res.data
           if (data.code == 200) {
             this.courseTaskList  = data.data
@@ -227,8 +262,14 @@ export default {
         })
       },
 
-      handleClick() {
+
+      handleClick(tab) {
         // console.log(tab, event)
+        if (tab.props.name == "first") {
+          this.init()
+        } else {
+          this.getCourseList()
+        }
 
       },
 
@@ -245,14 +286,23 @@ export default {
         
       },
       
-      changeItem(val) {
 
+      changeCourse(val) {
           this.courseId = val
           if (val == undefined || val == null || val == '') {
             ElMessage.success('请选择课程', {duration: 3 * 1000})
           } else {
             this.getCourseTaskList(val)
           }
+      },
+
+      changeTask(val) {
+        this.taskId = val
+        if (val == undefined || val == null || val == '') {
+          ElMessage.success('请选作业', {duration: 3 * 1000})
+        } else {
+          this.getScrenHomeworkList(val)
+        }
       },
 
       rateScore(val, scoreNow) {
@@ -276,7 +326,7 @@ export default {
               if (data.code == 200) {
                 ElMessage.success('评分成功', {duration: 3 * 1000})
                 this.init()
-                this.getCourseTaskList(this.courseId)
+                this.getScrenHomeworkList(this.taskId)
                 this.score = 0
               } 
             })
@@ -290,7 +340,7 @@ export default {
               if (data.code == 200) {
                 ElMessage.success('评分成功', {duration: 3 * 1000})
                 this.init()
-                this.getCourseTaskList(this.courseId)
+                this.getScrenHomeworkList(this.taskId)
                 this.score = 0
               } 
             })
